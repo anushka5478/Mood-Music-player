@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Music Player</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>MOOD MUSIC PLAYER</h1>
+      <p class="subtitle">Discover songs based on your vibes</p>
+    </header>
+
+    <!-- Mood Survey -->
+    <section class="mood-survey">
+      <label for="moodRange">How are you feeling today?</label>
+      <input type="range" id="moodRange" min="1" max="9" value="5">
+      <div class="mood-suggestion" id="surveySuggestion">🤌 Chill</div>
+    </section>
+
+    <!-- Mood Buttons -->
+    <section class="moods" id="moodButtons">
+      <div class="mood" data-mood="happy">😊 Happy</div>
+      <div class="mood" data-mood="sad">😭 Sad</div>
+      <div class="mood" data-mood="party">😎 Party</div>
+      <div class="mood" data-mood="chill">😌 Chill</div>
+      <div class="mood" data-mood="romantic">❤️ Romantic</div>
+      <div class="mood" data-mood="motivational">🔥 Motivational</div>
+      <div class="mood" data-mood="lofi">🤯 LoFi / Study</div>
+      <div class="mood" data-mood="rock">🤘 Rock / Metal</div>
+      <div class="mood" data-mood="jazz">🎷 Jazz / Blues</div>
+    </section>
+
+    <!-- Background and Canvas -->
+    <div id="background"></div>
+    <canvas id="effectCanvas"></canvas>
+
+    <!-- Quote -->
+    <section class="quote" id="quoteDisplay">
+      "Select the mood and enjoy the vibes!!"
+    </section>
+
+    <!-- Spotify -->
+    <section class="spotify-player" id="spotifyEmbed"></section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
