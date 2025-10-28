@@ -1,4 +1,4 @@
-/* ====== Global Reset ====== */
+/*  Global Reset */
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +13,8 @@ body {
     transition: background 1s ease;
 }
 
-/* ====== App Container ====== */
+
+/* App Container  */
 .app-container {
     position: relative;
     z-index: 10;
@@ -23,7 +24,7 @@ body {
     text-align: center;
 }
 
-/* ====== Header ====== */
+/*  Header*/
 header h1 {
     font-size: 2.5rem;
     margin-bottom: 5px;
@@ -37,7 +38,7 @@ header .subtitle {
     margin-bottom: 30px;
 }
 
-/* ====== Mood Survey Slider ====== */
+/* Mood Survey Slider  */
 .mood-survey {
     margin-bottom: 30px;
 }
@@ -54,7 +55,7 @@ header .subtitle {
     border-radius: 5px;
     background: #444;
     outline: none;
-    -webkit-appearance: none;
+    -webkit-animation: none;
 }
 
 #moodRange::-webkit-slider-thumb {
@@ -72,7 +73,7 @@ header .subtitle {
     transform: scale(1.2);
 }
 
-/* Mood Suggestion Text */
+/*  Mood Suggestion Text  */
 .mood-suggestion {
     margin-top: 15px;
     font-size: 1.1rem;
@@ -80,7 +81,7 @@ header .subtitle {
     color: #f0f0f0;
 }
 
-/* ====== Mood Buttons ====== */
+/* Mood Buttons */
 .moods {
     display: flex;
     flex-wrap: wrap;
@@ -112,7 +113,7 @@ header .subtitle {
     box-shadow: 0 0 25px rgba(255,255,255,0.6);
 }
 
-/* ====== Quote Section ====== */
+/* Quote Section */
 .quote {
     font-size: 1.3rem;
     font-weight: 500;
@@ -126,7 +127,7 @@ header .subtitle {
     transition: all 0.5s ease;
 }
 
-/* ====== Spotify Player ====== */
+/* Spotify Player */
 .spotify-player iframe {
     width: 100%;
     max-width: 450px;
@@ -139,7 +140,7 @@ header .subtitle {
     display: block;
 }
 
-/* ====== Background & Canvas ====== */
+/* Background & Canvas*/
 #background, #effectCanvas {
     position: fixed;
     top:0; left:0;
@@ -149,7 +150,7 @@ header .subtitle {
     pointer-events: none;
 }
 
-/* ====== Animated Blobs ====== */
+/* Animated Blobs */
 .blob {
     position: absolute;
     border-radius: 50%;
@@ -162,19 +163,48 @@ header .subtitle {
     transition: all 1s ease;
 }
 
-/* Float Animation */
 @keyframes floatBlob {
     0% { transform: translateY(0px) translateX(0px);}
     50% { transform: translateY(-50px) translateX(30px);}
     100% { transform: translateY(0px) translateX(0px);}
 }
 
-/* ====== Canvas Particle Glows ====== */
+/* Canvas Particle Glows] */
 canvas {
     z-index: 1;
 }
 
-/* ====== Smooth transitions ====== */
+/* Smooth transitions  */
 body, .mood, .quote, .spotify-player iframe {
     transition: all 0.7s ease;
+}
+
+/*Mood Watermarks */
+.mood-mark {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.12;
+    filter: blur(20px);
+    transform: translate(-50%, -50%);
+    transition: all 1s ease;
+}
+
+.mood-mark.float {
+    animation: floatMove 20s linear infinite;
+}
+
+.mood-mark.rotate {
+    animation: rotateSlow 25s linear infinite;
+}
+
+@keyframes floatMove {
+    0% { transform: translate(-50%, -50%) translateY(0); }
+    50% { transform: translate(-50%, -50%) translateY(-30px); }
+    100% { transform: translate(-50%, -50%) translateY(0); }
+}
+
+@keyframes rotateSlow {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }

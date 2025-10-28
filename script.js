@@ -1,4 +1,4 @@
-// ================== Spotify Playlists ==================
+// ================== Mood Playlists ==================
 const moodPlaylists = {
   happy: "37i9dQZF1DXdPec7aLTmlC",
   sad: "37i9dQZF1DX7qK8ma5wgG1",
@@ -29,48 +29,62 @@ const surveyMoods = ["happy","sad","party","chill","romantic","motivational","lo
 const surveyDisplay = document.getElementById("surveySuggestion");
 const moodRange = document.getElementById("moodRange");
 
-moodRange.addEventListener("input", ()=>{
+moodRange.addEventListener("input", ()=> {
   const index = Math.round(moodRange.value - 1);
   surveyDisplay.textContent = `Mood suggestion: ${surveyMoods[index]} ${getEmoji(surveyMoods[index])}`;
 });
 
-function getEmoji(mood){
+function getEmoji(mood) {
   return {
     happy:"😊", sad:"😭", party:"😎", chill:"😌",
     romantic:"❤️", motivational:"🔥", lofi:"🤯", rock:"🤘", jazz:"🎷"
   }[mood] || "";
 }
 
-// ================== Mood Colors (Professional & Vibrant) ==================
+// ================== Mood Colors ==================
 const moodColors = {
-  happy: ["#2b2b2b","#ffb347","#ffcc33"],        // soft yellow glow
-  sad: ["#0d1117","#161b22","#1b1f28"],          // deep dark
-  party: ["#1b1b2f","#ff6ec7","#6eebff"],        // muted neon pink/cyan
-  chill: ["#1a1a2e","#66a6ff","#89f7fe"],        // soft blue shades
-  romantic: ["#2b1a1e","#ff6f91","#ffb3c1"],     // muted pink/purple
-  motivational: ["#1a2b1a","#43e97b","#38f9d7"], // subtle green/cyan
-  lofi: ["#1a1a1a","#a1c4fd","#c2e9fb"],         // pastel blues
-  rock: ["#232526","#414345","#555555"],          // dark grays
-  jazz: ["#1c1c2e","#2a2a3f","#6a82fb"]          // navy/soft purple
+  happy: ["#2b2b2b","#ffb347","#ffcc33"],
+  sad: ["#0d1117","#161b22","#1b1f28"],
+  party: ["#1b1b2f","#ff6ec7","#6eebff"],
+  chill: ["#1a1a2e","#66a6ff","#89f7fe"],
+  romantic: ["#2b1a1e","#ff6f91","#ffb3c1"],
+  motivational: ["#1a2b1a","#43e97b","#38f9d7"],
+  lofi: ["#1a1a1a","#a1c4fd","#c2e9fb"],
+  rock: ["#232526","#414345","#555555"],
+  jazz: ["#1c1c2e","#2a2a3f","#6a82fb"]
 };
 
-// ================== Buttons & Background Handling ==================
+// ================== DOM Elements ==================
 const moodButtons = document.getElementById("moodButtons");
 const quoteDisplay = document.getElementById("quoteDisplay");
 const spotifyEmbed = document.getElementById("spotifyEmbed");
 const bg = document.getElementById("background");
+const canvas = document.getElementById("effectCanvas");
+const ctx = canvas.getContext("2d");
 
+let particles = [];
+let animationId;
+let moodMarkDiv = null;
+
+// ================== Resize Canvas ==================
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+// ================== Mood Button Click ==================
 moodButtons.addEventListener("click", (e)=>{
   const btn = e.target.closest(".mood");
   if(!btn) return;
-
   const mood = btn.dataset.mood;
 
   // Highlight active
   moodButtons.querySelectorAll(".mood").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 
-  // Quote
+  // Update quote
   quoteDisplay.textContent = moodQuotes[mood];
 
   // Background gradient
@@ -82,12 +96,15 @@ moodButtons.addEventListener("click", (e)=>{
     spotifyEmbed.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${playlistId}" allow="encrypted-media; autoplay;" allowfullscreen></iframe>`;
   }
 
-  // Blobs & Particles
+  // Generate blobs & effects
   generateBlobs(mood);
   startEffect(mood);
+
+  // Show subtle mood watermark
+  showMoodWatermark(mood);
 });
 
-// ================== Background ==================
+// ================== Background Gradient ==================
 function setBackgroundByMood(mood){
   const colors = moodColors[mood] || ["#0d1117","#161b22","#1b1f28"];
   document.body.style.background = `linear-gradient(135deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
@@ -111,20 +128,7 @@ function generateBlobs(mood){
   }
 }
 
-// ================== Canvas Effects ==================
-const canvas = document.getElementById("effectCanvas");
-const ctx = canvas.getContext("2d");
-let particles = [];
-let animationId;
-
-function resizeCanvas(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
-
-// Particle Effects
+// ================== Particle Effects ==================
 function startEffect(mood){
   particles=[];
   cancelAnimationFrame(animationId);
@@ -145,7 +149,6 @@ function clearEffects(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-// Confetti
 function initConfetti(colors){
   for(let i=0;i<100;i++){
     particles.push({
@@ -159,7 +162,6 @@ function initConfetti(colors){
   }
 }
 
-// Rain
 function initRain(){
   for(let i=0;i<150;i++){
     particles.push({
@@ -173,7 +175,6 @@ function initRain(){
   }
 }
 
-// Sparkles
 function initSparkles(colors){
   for(let i=0;i<80;i++){
     particles.push({
@@ -187,7 +188,6 @@ function initSparkles(colors){
   }
 }
 
-// Animate particles
 function animateParticles(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   particles.forEach(p=>{
@@ -212,66 +212,69 @@ function animateParticles(){
   animationId=requestAnimationFrame(animateParticles);
 }
 
-// Initialize dark default
+// ================== Mood Watermark SVGs ==================
+function showMoodWatermark(mood){
+  if(moodMarkDiv) moodMarkDiv.remove();
+  moodMarkDiv = document.createElement("div");
+  moodMarkDiv.classList.add("mood-mark");
+
+  let svgIcon = "";
+  let position = {top:"50%", left:"50%"};
+  let animationClass = "float";
+
+  switch(mood){
+    case "happy":
+      svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#FFD93B" width="80" height="80">
+        <circle cx="32" cy="32" r="30"/>
+        <circle cx="22" cy="26" r="4" fill="#000"/>
+        <circle cx="42" cy="26" r="4" fill="#000"/>
+        <path d="M22 42c4 6 16 6 20 0" stroke="#000" stroke-width="3" fill="none"/>
+      </svg>`; break;
+    case "romantic":
+      svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#FF4C4C" width="80" height="80">
+                <path d="M32 58s26-16 26-34c0-8-6-14-14-14-6 0-12 6-12 6s-6-6-12-6c-8 0-14 6-14 14 0 18 26 34 26 34z"/>
+      </svg>`; break;
+    case "sad":
+      svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#5DADE2" width="80" height="80">
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#5DADE2" stroke-width="4"/>
+        <path d="M20 36c0 6 24 6 24 0" stroke="#000" stroke-width="3" fill="none"/>
+      </svg>`; break;
+    case "motivational":
+      svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#FF7F50" width="80" height="80">
+        <path d="M32 2L26 24h12L32 2zm0 60V26" stroke="#FFF" stroke-width="3"/>
+      </svg>`; break;
+    case "party":
+      svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#DDA0DD" width="80" height="80">
+        <path d="M32 2l6 20h-12l6-20zm0 60v-30" stroke="#FFF" stroke-width="3"/>
+      </svg>`; animationClass = "rotate"; break;
+    case "chill":
+    case "lofi":
+      svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#85C1E9" width="80" height="80">
+        <circle cx="32" cy="32" r="14"/>
+      </svg>`; break;
+    case "rock":
+      svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#A569BD" width="80" height="80">
+        <polygon points="32,2 22,62 32,50 42,62 32,2"/>
+      </svg>`; break;
+    case "jazz":
+      svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#3498DB" width="80" height="80">
+        <rect x="16" y="30" width="32" height="4"/>
+        <circle cx="48" cy="32" r="4"/>
+      </svg>`; break;
+  }
+
+  moodMarkDiv.innerHTML = svgIcon;
+  moodMarkDiv.style.top = position.top;
+  moodMarkDiv.style.left = position.left;
+  moodMarkDiv.classList.add(animationClass);
+  document.body.appendChild(moodMarkDiv);
+}
+
+// ================== Initialize Default ==================
 window.addEventListener("load", ()=>{
   setBackgroundByMood("chill");
   generateBlobs("chill");
   surveyDisplay.textContent=`Mood suggestion: chill 😌`;
+  showMoodWatermark("chill");
 });
 
-let moodMarkDiv = null;
-
-function showMoodWatermark(mood) {
-    if(moodMarkDiv) moodMarkDiv.remove();
-
-    moodMarkDiv = document.createElement("div");
-    moodMarkDiv.classList.add("mood-mark");
-
-    let svgIcon = "";
-    let position = { top: "50%", left: "50%" };
-    let animationClass = "float";
-
-    switch(mood){
-        case "happy":
-            svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#FFD93B"><circle cx="32" cy="32" r="30"/><circle cx="22" cy="26" r="4" fill="#000"/><circle cx="42" cy="26" r="4" fill="#000"/><path d="M22 42c4 6 16 6 20 0" stroke="#000" stroke-width="3" fill="none"/></svg>`;
-            position = { top: "50%", left: "50%" };
-            break;
-        case "romantic":
-            svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#FF4C4C"><path d="M32 58s26-16 26-34c0-8-6-14-14-14-6 0-12 6-12 6s-6-6-12-6c-8 0-14 6-14 14 0 18 26 34 26 34z"/></svg>`;
-            position = { top: "50%", left: "50%" };
-            break;
-        case "sad":
-            svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#5DADE2"><path d="M32 2C15 2 2 15 2 32s13 30 30 30 30-13 30-30S49 2 32 2zm0 50c-11 0-20-9-20-20S21 12 32 12s20 9 20 20-9 20-20 20zm-8-12a4 4 0 0 1 8 0" stroke="#000" stroke-width="2" fill="none"/><path d="M20 36c0 6 24 6 24 0" stroke="#000" stroke-width="3" fill="none"/></svg>`;
-            position = { top: "70%", left: "80%" };
-            break;
-        case "motivational":
-            svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#FF7F50"><path d="M32 2L26 24h12L32 2zm0 60V26" stroke="#FFF" stroke-width="3"/></svg>`;
-            position = { top: "20%", left: "80%" };
-            break;
-        case "party":
-            svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#DDA0DD"><path d="M32 2l6 20h-12l6-20zm0 60v-30" stroke="#FFF" stroke-width="3"/></svg>`;
-            position = { top: "50%", left: "50%" };
-            animationClass = "rotate";
-            break;
-        case "chill":
-        case "lofi":
-            svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#85C1E9"><path d="M32 2c8 0 14 6 14 14s-6 14-14 14-14-6-14-14 6-14 14-14z"/></svg>`;
-            position = { top: "20%", left: "20%" };
-            break;
-        case "rock":
-            svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#A569BD"><path d="M32 2L22 62l10-12 10 12L32 2z"/></svg>`;
-            position = { top: "80%", left: "20%" };
-            break;
-        case "jazz":
-            svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="#3498DB"><path d="M16 32h32v4H16z"/><circle cx="48" cy="32" r="4"/></svg>`;
-            position = { top: "60%", left: "30%" };
-            break;
-    }
-
-    moodMarkDiv.innerHTML = svgIcon;
-    moodMarkDiv.style.top = position.top;
-    moodMarkDiv.style.left = position.left;
-    moodMarkDiv.classList.add(animationClass);
-
-    document.body.appendChild(moodMarkDiv);
-}

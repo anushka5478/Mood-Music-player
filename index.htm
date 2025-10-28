@@ -8,16 +8,17 @@
 </head>
 <body>
   <div class="app-container">
+    <!-- Header -->
     <header>
       <h1>MOOD MUSIC PLAYER</h1>
       <p class="subtitle">Discover songs based on your vibes</p>
     </header>
 
-    <!-- Mood Survey -->
+    <!-- Mood Survey Slider -->
     <section class="mood-survey">
       <label for="moodRange">How are you feeling today?</label>
       <input type="range" id="moodRange" min="1" max="9" value="5">
-      <div class="mood-suggestion" id="surveySuggestion">🤌 Chill</div>
+      <div class="mood-suggestion" id="surveySuggestion">😌 Chill</div>
     </section>
 
     <!-- Mood Buttons -->
@@ -33,19 +34,20 @@
       <div class="mood" data-mood="jazz">🎷 Jazz / Blues</div>
     </section>
 
-    <!-- Background and Canvas -->
+    <!-- Background & Canvas for Blobs/Particles -->
     <div id="background"></div>
     <canvas id="effectCanvas"></canvas>
 
-    <!-- Quote -->
+    <!-- Quote Display -->
     <section class="quote" id="quoteDisplay">
       "Select the mood and enjoy the vibes!!"
     </section>
 
-    <!-- Spotify -->
+    <!-- Spotify Player Embed -->
     <section class="spotify-player" id="spotifyEmbed"></section>
   </div>
 
+  <!-- JS Script -->
   <script src="script.js"></script>
 </body>
 </html>
