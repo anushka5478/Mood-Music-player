@@ -104,13 +104,13 @@ moodButtons.addEventListener("click", (e)=>{
   showMoodWatermark(mood);
 });
 
-// ================== Background Gradient ==================
+// Background Gradient 
 function setBackgroundByMood(mood){
   const colors = moodColors[mood] || ["#0d1117","#161b22","#1b1f28"];
   document.body.style.background = `linear-gradient(135deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
 }
 
-// ================== Blobs ==================
+//Blobs
 function generateBlobs(mood){
   const colors = moodColors[mood] || ["#444","#555"];
   bg.innerHTML = '';
@@ -128,7 +128,7 @@ function generateBlobs(mood){
   }
 }
 
-// ================== Particle Effects ==================
+// Particle Effects
 function startEffect(mood){
   particles=[];
   cancelAnimationFrame(animationId);
@@ -270,7 +270,7 @@ function showMoodWatermark(mood){
   document.body.appendChild(moodMarkDiv);
 }
 
-// ================== Initialize Default ==================
+// Initialize Default
 window.addEventListener("load", ()=>{
   setBackgroundByMood("chill");
   generateBlobs("chill");
