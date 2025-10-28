@@ -1,4 +1,4 @@
-// ================== Mood Playlists ==================
+// Mood Playlists
 const moodPlaylists = {
   happy: "37i9dQZF1DXdPec7aLTmlC",
   sad: "37i9dQZF1DX7qK8ma5wgG1",
@@ -11,7 +11,7 @@ const moodPlaylists = {
   jazz: "37i9dQZF1DXbITWG1ZJKYt"
 };
 
-// ================== Mood Quotes ==================
+// Mood Quotes 
 const moodQuotes = {
   happy: "Smile, it's a good day to feel good! 😊",
   sad: "Every storm runs out of rain... 😭",
@@ -24,7 +24,7 @@ const moodQuotes = {
   jazz: "Smooth vibes for smooth minds 🎷"
 };
 
-// ================== Mood Slider ==================
+//  Mood Slider
 const surveyMoods = ["happy","sad","party","chill","romantic","motivational","lofi","rock","jazz"];
 const surveyDisplay = document.getElementById("surveySuggestion");
 const moodRange = document.getElementById("moodRange");
@@ -41,7 +41,7 @@ function getEmoji(mood) {
   }[mood] || "";
 }
 
-// ================== Mood Colors ==================
+// Mood Colors 
 const moodColors = {
   happy: ["#2b2b2b","#ffb347","#ffcc33"],
   sad: ["#0d1117","#161b22","#1b1f28"],
@@ -54,7 +54,7 @@ const moodColors = {
   jazz: ["#1c1c2e","#2a2a3f","#6a82fb"]
 };
 
-// ================== DOM Elements ==================
+//  Elements
 const moodButtons = document.getElementById("moodButtons");
 const quoteDisplay = document.getElementById("quoteDisplay");
 const spotifyEmbed = document.getElementById("spotifyEmbed");
@@ -66,7 +66,7 @@ let particles = [];
 let animationId;
 let moodMarkDiv = null;
 
-// ================== Resize Canvas ==================
+// Resize Canvas
 function resizeCanvas(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -74,7 +74,7 @@ function resizeCanvas(){
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
-// ================== Mood Button Click ==================
+// Mood Button Click 
 moodButtons.addEventListener("click", (e)=>{
   const btn = e.target.closest(".mood");
   if(!btn) return;
