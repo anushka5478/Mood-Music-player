@@ -31,6 +31,11 @@ Simple. Fast. Feel-based.
 
 ---
 
+## 🎧 Live Demo  
+👉 *(https://mood-music-playyer.netlify.app)*  
+
+---
+
 ## 💡 What’s Next  
 - Mood detection using webcam or text input  
 - Spotify or YouTube integration  
